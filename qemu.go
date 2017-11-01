@@ -331,7 +331,8 @@ func (q *qemu) appendNetworks(devices []ciaoQemu.Device, endpoints []Endpoint) [
 	for idx, endpoint := range endpoints {
 		devices = append(devices,
 			ciaoQemu.NetDevice{
-				Type:          networkModelToQemuType(endpoint.NetPair.NetInterworkingModel),
+				Type: ciaoQemu.MACVTAP,
+				//networkModelToQemuType(endpoint.NetPair.NetInterworkingModel),
 				Driver:        ciaoQemu.VirtioNetPCI,
 				ID:            fmt.Sprintf("network-%d", idx),
 				IFName:        endpoint.NetPair.TAPIface.Name,
@@ -341,6 +342,7 @@ func (q *qemu) appendNetworks(devices []ciaoQemu.Device, endpoints []Endpoint) [
 				VHost:         true,
 				DisableModern: q.nestedRun,
 				FDs:           endpoint.NetPair.VMFds,
+				VhostFDs:      endpoint.NetPair.VhostFds,
 			},
 		)
 	}
